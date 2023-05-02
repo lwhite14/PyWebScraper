@@ -1,1 +1,5 @@
+.vs/
+venv/
 __pycache__/
+
+*.user
