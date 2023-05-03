@@ -7,11 +7,11 @@ class Scraper(object):
     birmingham = Birmingham()
     surrey = Surrey()
 
-    def Manchester(self, isRaw):
-        self.manchester.ScrapeForData(isRaw)
+    def Manchester(self, isRaw, depth):
+        self.manchester.ScrapeForData(isRaw, depth, "Maritime")
 
-    def Birmingham(self, isRaw):
-        self.birmingham.ScrapeForData(isRaw)
+    def Birmingham(self, isRaw, depth):
+        self.birmingham.ScrapeForData(isRaw, depth, "Maritime")
 
-    def Surrey(self, isRaw):
-        self.surrey.ScrapeForData(isRaw)
+    def Surrey(self, isRaw, depth):
+        self.surrey.ScrapeForData(isRaw, depth, "Maritime")

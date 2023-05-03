@@ -3,7 +3,7 @@ import os
 
 class University(ABC):
     @abstractmethod
-    def ScrapeForData(self, isRaw):
+    def ScrapeForData(self, isRaw, depth, keywords):
         pass
 
     @abstractmethod

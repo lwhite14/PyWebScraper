@@ -5,7 +5,7 @@ class Birmingham(University):
     def __init__(self):
         pass
 
-    def ScrapeForData(self, isRaw):
+    def ScrapeForData(self, isRaw, depth, keywords):
         if isRaw:
             print("Scraping for Birmingham data... Printing to console")
         else:
