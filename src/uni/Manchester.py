@@ -28,10 +28,11 @@ class Manchester(University):
                 for x in range(len(divs)):
                     if not x == 0:
                         titleArr.append(divs[x].find("h3").get_text())
-                        hrefArr.append(divs[x].find("a").get("href"))
+                        href = divs[x].find("a").get("href")
+                        hrefArr.append(href)
                         authorArr.append(self.GetAuthors(divs[x]))
                         dateArr.append(divs[x].find("span", {"class": "date"}).get_text())
-                        abstractArr.append(" ")
+                        abstractArr.append(self.GetAbstract(href))
                         keywordsArr.append(keywords)
 
                 for x in range(len(divs) - 1):
@@ -75,3 +76,14 @@ class Manchester(University):
                         authorString += spans[x].get_text()
 
         return authorString
+
+
+    def GetAbstract(self, href):
+        page = requests.get(href)
+        soup = BeautifulSoup(page.text, "html.parser")
+
+        abstractDiv = soup.find("div", {"class": "textblock"})
+        if abstractDiv == None:
+            return "None"
+        
+        return abstractDiv.get_text()
