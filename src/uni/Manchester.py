@@ -11,54 +11,54 @@ class Manchester(University):
 
 
     def ScrapeForData(self, isRaw, depth, keywords):
-        for i in range(depth):
-            url = "https://research.manchester.ac.uk/en/searchAll/advanced/?searchByRadioGroup=PartOfNameOrTitle&searchBy=PartOfNameOrTitle&allThese=" + keywords + "&exactPhrase=&or=&minus=&family=publications&doSearch=Search&slowScroll=true&resultFamilyTabToSelect=&page=" + str(i)
-            page = requests.get(url)
+        for i in range(len(keywords)):
+            for y in range(depth):
+                url = "https://research.manchester.ac.uk/en/searchAll/advanced/?searchByRadioGroup=PartOfNameOrTitle&searchBy=PartOfNameOrTitle&allThese=" + keywords[i] + "&exactPhrase=&or=&minus=&family=publications&doSearch=Search&slowScroll=true&resultFamilyTabToSelect=&page=" + str(y)
+                page = requests.get(url)
 
-            titleArr = []
-            hrefArr = []
-            authorArr = []
-            dateArr = []
-            abstractArr = []
-            keywordsArr = []
+                titleArr = []
+                hrefArr = []
+                authorArr = []
+                dateArr = []
+                abstractArr = []
+                keywordsArr = []
 
-            if page.status_code == 200:
-                soup = BeautifulSoup(page.text, "html.parser")
-                divs = soup.find_all("div", {"class": "result-container"})
+                if page.status_code == 200:
+                    soup = BeautifulSoup(page.text, "html.parser")
+                    divs = soup.find_all("div", {"class": "result-container"})
 
-                print("Parsing page "+ str(i + 1) + "...")
-                for x in tqdm(range(len(divs))):
-                    if not x == 0:
-                        titleArr.append(divs[x].find("h3").get_text())
-                        href = divs[x].find("a").get("href")
-                        hrefArr.append(href)
-                        authorArr.append(self.GetAuthors(divs[x]))
-                        dateArr.append(divs[x].find("span", {"class": "date"}).get_text())
-                        abstractArr.append(self.GetAbstract(href))
-                        keywordsArr.append(keywords)
+                    for x in tqdm(range(len(divs)), ncols=80, ascii=True, desc=keywords[i] + "; Page " + str(1 + y)):
+                        if not x == 0:
+                            titleArr.append(divs[x].find("h3").get_text())
+                            href = divs[x].find("a").get("href")
+                            hrefArr.append(href)
+                            authorArr.append(self.GetAuthors(divs[x]))
+                            dateArr.append(divs[x].find("span", {"class": "date"}).get_text())
+                            abstractArr.append(self.GetAbstract(href))
+                            keywordsArr.append(keywords[i])
 
-                for x in range(len(divs) - 1):
-                    self.arr.append(self.wrap + titleArr[x] + self.wrap + self.sep + self.wrap + hrefArr[x] + self.wrap + self.sep + self.wrap + authorArr[x] + self.wrap + self.sep + self.wrap + dateArr[x] + self.wrap + self.sep + self.wrap + abstractArr[x] + self.wrap + self.sep + self.wrap + keywordsArr[x] + self.wrap + self.sep + self.wrap + "University of Manchester\"")
+                    for x in range(len(divs) - 1):
+                        self.arr.append(self.wrap + titleArr[x] + self.wrap + self.sep + self.wrap + hrefArr[x] + self.wrap + self.sep + self.wrap + authorArr[x] + self.wrap + self.sep + self.wrap + dateArr[x] + self.wrap + self.sep + self.wrap + abstractArr[x] + self.wrap + self.sep + self.wrap + keywordsArr[x] + self.wrap + self.sep + self.wrap + "University of Manchester\"")
 
+                else:
+                    print("Error: " + str(page.status_code))
+
+            if (isRaw):
+                self.OutputRaw()
             else:
-                print("Error: " + str(page.status_code))
-
-        if (isRaw):
-            self.OutputRaw()
-        else:
-            self.OutputCSV()
+                self.OutputCSV()
 
 
     def OutputCSV(self):
         f = open("out/manchester.csv", "w", encoding="utf-8")
-        f.write("Title_Href_Author_Date_Abstract_Keyword_University Name" + u"\n")
+        f.write("Title,Href,Author,Date,Abstract,Keyword,University Name" + u"\n")
         for x in range(len(self.arr)):
             f.write(self.arr[x] + u"\n")
         f.close()
 
 
     def OutputRaw(self):
-        print("Title_Href_Author_Date_Abstract_Keyword_University Name")
+        print("Title,Href,Author,Date,Abstract,Keyword,University Name")
         for x in range(len(self.arr)):
             print(self.arr[x])
 

@@ -7,17 +7,17 @@ class Scraper(object):
     birmingham = Birmingham()
     surrey = Surrey()
 
-    def Manchester(self, isRaw, depth):
+    def Manchester(self, isRaw, depth, keywords):
         print ("Scraping for data... this might take a while!")
-        self.manchester.ScrapeForData(isRaw, depth, "Maritime")
-        print ("Done")
+        self.manchester.ScrapeForData(isRaw, depth, keywords)
+        print ("---DONE---")
 
-    def Birmingham(self, isRaw, depth):
+    def Birmingham(self, isRaw, depth, keywords):
         print ("Scraping for data... this might take a while!")
-        self.birmingham.ScrapeForData(isRaw, depth, "Maritime")
-        print ("Done")
+        self.birmingham.ScrapeForData(isRaw, depth, keywords)
+        print ("---DONE---")
 
-    def Surrey(self, isRaw, depth):
+    def Surrey(self, isRaw, depth, keywords):
         print ("Scraping for data... this might take a while!")
-        self.surrey.ScrapeForData(isRaw, depth, "Maritime")
-        print ("Done")
+        self.surrey.ScrapeForData(isRaw, depth, keywords)
+        print ("---DONE---")

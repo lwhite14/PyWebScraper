@@ -15,12 +15,13 @@ class PyUniScraper(object):
 
         parser.add_argument('university', help='University to get information for')
         parser.add_argument('depth', type=int, default=1, help='Number of pages')
+        parser.add_argument('keywords', metavar='K', type=str, nargs='+', help='Keywords to search for')
         parser.add_argument('--raw', dest='raw', action='store_const', const=True, default=False, help='Output to console instead of csv')
         parser.add_argument('-v', '--version', action='version', version='PyUniScraper v0.0.1')
         args = parser.parse_args()
         if args.university == "manchester":
-            scraper.Manchester(args.raw, args.depth)
+            scraper.Manchester(args.raw, args.depth, args.keywords)
         if args.university == "birmingham":
-            scraper.Birmingham(args.raw, args.depth)
+            scraper.Birmingham(args.raw, args.depth, args.keywords)
         if args.university == "surrey":
-            scraper.Surrey(args.raw, args.depth)
+            scraper.Surrey(args.raw, args.depth, args.keywords)
