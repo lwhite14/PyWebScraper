@@ -10,11 +10,14 @@ class Scraper(object):
     def Manchester(self, isRaw, depth):
         print ("Scraping for data... this might take a while!")
         self.manchester.ScrapeForData(isRaw, depth, "Maritime")
+        print ("Done")
 
     def Birmingham(self, isRaw, depth):
         print ("Scraping for data... this might take a while!")
         self.birmingham.ScrapeForData(isRaw, depth, "Maritime")
+        print ("Done")
 
     def Surrey(self, isRaw, depth):
         print ("Scraping for data... this might take a while!")
         self.surrey.ScrapeForData(isRaw, depth, "Maritime")
+        print ("Done")

@@ -1,6 +1,7 @@
 from .University import University
 from bs4 import BeautifulSoup
 import requests
+from tqdm import tqdm
 
 class Manchester(University):
     arr = []
@@ -25,7 +26,8 @@ class Manchester(University):
                 soup = BeautifulSoup(page.text, "html.parser")
                 divs = soup.find_all("div", {"class": "result-container"})
 
-                for x in range(len(divs)):
+                print("Parsing page "+ str(i + 1) + "...")
+                for x in tqdm(range(len(divs))):
                     if not x == 0:
                         titleArr.append(divs[x].find("h3").get_text())
                         href = divs[x].find("a").get("href")
