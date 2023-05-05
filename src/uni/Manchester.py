@@ -35,7 +35,7 @@ class Manchester(University):
                         keywordsArr.append(keywords)
 
                 for x in range(len(divs) - 1):
-                    self.arr.append(titleArr[x] + "_" + hrefArr[x] + "_" + authorArr[x] + "_" + dateArr[x] + "_" + abstractArr[x] + "_" + keywordsArr[x] + "_" + "University of Manchester")
+                    self.arr.append(self.wrap + titleArr[x] + self.wrap + self.sep + self.wrap + hrefArr[x] + self.wrap + self.sep + self.wrap + authorArr[x] + self.wrap + self.sep + self.wrap + dateArr[x] + self.wrap + self.sep + self.wrap + abstractArr[x] + self.wrap + self.sep + self.wrap + keywordsArr[x] + self.wrap + self.sep + self.wrap + "University of Manchester\"")
 
             else:
                 print("Error: " + str(page.status_code))
