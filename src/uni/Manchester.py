@@ -1,10 +1,16 @@
 from .University import University
 from bs4 import BeautifulSoup
-import requests
 from tqdm import tqdm
+import requests
+import csv
 
 class Manchester(University):
-    arr = []
+    titleArr = []
+    hrefArr = []
+    authorArr = []
+    dateArr = []
+    abstractArr = []
+    keywordsArr = []
 
     def __init__(self):
         pass
@@ -16,30 +22,19 @@ class Manchester(University):
                 url = "https://research.manchester.ac.uk/en/searchAll/advanced/?searchByRadioGroup=PartOfNameOrTitle&searchBy=PartOfNameOrTitle&allThese=" + keywords[i] + "&exactPhrase=&or=&minus=&family=publications&doSearch=Search&slowScroll=true&resultFamilyTabToSelect=&page=" + str(y)
                 page = requests.get(url)
 
-                titleArr = []
-                hrefArr = []
-                authorArr = []
-                dateArr = []
-                abstractArr = []
-                keywordsArr = []
-
                 if page.status_code == 200:
                     soup = BeautifulSoup(page.text, "html.parser")
                     divs = soup.find_all("div", {"class": "result-container"})
 
                     for x in tqdm(range(len(divs)), ncols=80, ascii=True, desc=keywords[i] + "; Page " + str(1 + y)):
                         if not x == 0:
-                            titleArr.append(divs[x].find("h3").get_text())
+                            self.titleArr.append(divs[x].find("h3").get_text())
                             href = divs[x].find("a").get("href")
-                            hrefArr.append(href)
-                            authorArr.append(self.GetAuthors(divs[x]))
-                            dateArr.append(divs[x].find("span", {"class": "date"}).get_text())
-                            abstractArr.append(self.GetAbstract(href))
-                            keywordsArr.append(keywords[i])
-
-                    for x in range(len(divs) - 1):
-                        self.arr.append(self.wrap + titleArr[x] + self.wrap + self.sep + self.wrap + hrefArr[x] + self.wrap + self.sep + self.wrap + authorArr[x] + self.wrap + self.sep + self.wrap + dateArr[x] + self.wrap + self.sep + self.wrap + abstractArr[x] + self.wrap + self.sep + self.wrap + keywordsArr[x] + self.wrap + self.sep + self.wrap + "University of Manchester\"")
-
+                            self.hrefArr.append(href)
+                            self.authorArr.append(self.GetAuthors(divs[x]))
+                            self.dateArr.append(divs[x].find("span", {"class": "date"}).get_text())
+                            self.abstractArr.append(self.GetAbstract(href))
+                            self.keywordsArr.append(keywords[i])
                 else:
                     print("Error: " + str(page.status_code))
 
@@ -50,21 +45,19 @@ class Manchester(University):
 
 
     def OutputCSV(self):
-        f = open("out/manchester.csv", "w", encoding="utf-8")
-        f.write("Title,Href,Author,Date,Abstract,Keyword,University Name" + u"\n")
-        for x in range(len(self.arr)):
-            f.write(self.arr[x] + u"\n")
-        f.close()
-
+        with open('out/manchester.csv', 'w', newline='', encoding='utf-8') as csvFile:
+            headerList = ['Title', 'Href', 'Author', 'Date', 'Abstract', 'Keywords', 'University Name']
+            writer = csv.DictWriter(csvFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL, fieldnames=headerList)
+            writer.writeheader()
+            for x in range(len(self.titleArr)):
+                writer.writerow({'Title': self.titleArr[x], 'Href': self.hrefArr[x], 'Author': self.authorArr[x], 'Date': self.dateArr[x], 'Abstract': self.abstractArr[x], 'Keywords': self.keywordsArr[x], 'University Name': 'University of Manchester'})
 
     def OutputRaw(self):
         print("Title,Href,Author,Date,Abstract,Keyword,University Name")
         for x in range(len(self.arr)):
-            print(self.arr[x])
-
+            print(self.titleArr[x] + ',' + self.hrefArr[x] + ',' + self.authorArr[x] + ',' + self.dateArr[x] + ',' + self.abstractArr[x] + ',' + self.keywordsArr[x] + 'University of Manchester')
 
     def GetAuthors(self, currentDiv):
-        # Getting the authors is a bit more complicated
         authorString = ""
         spans = currentDiv.find_all("span")
         for x in range(len(spans)):

@@ -30,6 +30,7 @@
     <Compile Include="src\Scraper.py" />
     <Compile Include="src\uni\Birmingham.py" />
     <Compile Include="src\uni\Manchester.py" />
+    <Compile Include="src\uni\Portsmouth.py" />
     <Compile Include="src\uni\Surrey.py" />
     <Compile Include="src\uni\University.py" />
   </ItemGroup>
