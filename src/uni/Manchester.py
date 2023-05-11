@@ -38,10 +38,10 @@ class Manchester(University):
                 else:
                     print("Error: " + str(page.status_code))
 
-            if (isRaw):
-                self.OutputRaw()
-            else:
-                self.OutputCSV()
+        if (isRaw):
+            self.OutputRaw()
+        else:
+            self.OutputCSV()
 
 
     def OutputCSV(self):
