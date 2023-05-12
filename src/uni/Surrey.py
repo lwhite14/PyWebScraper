@@ -1,8 +1,10 @@
 from .University import University
 from bs4 import BeautifulSoup
 from tqdm import tqdm
-import requests
+from selenium import webdriver 
+from dateutil.parser import parse
 import csv
+import time
 
 class Surrey(University):
     titleArr = []
@@ -17,33 +19,34 @@ class Surrey(University):
 
 
     def ScrapeForData(self, isRaw, depth, keywords):
+        print("The scraping for this University uses Selenium and will take longer to parse... You have been warned!")
         for i in range(len(keywords)):
             for y in range(depth):
-                url = 'https://openresearch.surrey.ac.uk/esploro/search/outputs?query=any,contains,' + keywords[i] + '&page=' + str(y+1) + '&scope=Research&institution=44SUR_INST'
-                page = requests.get(url)
+                url = 'https://openresearch.surrey.ac.uk/esploro/search/outputs?query=any,contains,' + keywords[i] + '&page=' + str(y + 1) + '&scope=Research'
+                options = webdriver.FirefoxOptions() 
+                options.headless = True 
+                driver = webdriver.Firefox(options=options)
+                driver.get(url)
+                time.sleep(5)
+                htmlSource = driver.page_source
+                driver.close()
 
-                if page.status_code == 200:
-                    soup = BeautifulSoup(page.text, 'html.parser')
-                    spans = soup.find_all('span', {'class': 'brief-body'})
+                soup = BeautifulSoup(htmlSource, 'html.parser')
+                spans = soup.find_all('span', {'class': 'brief-body'})
 
-                    print(soup.prettify())
-                    print(str(len(spans)))
-
-                    for x in tqdm(range(len(spans)), ncols=80, ascii=True, desc=keywords[i] + '; Page ' + str(1 + y)):
-                        if not x == 0:
-                            self.titleArr.append(spans[x].find('a').get_text())
-                            self.hrefArr.append(spans[x].find('a').get('href'))
-                            self.authorArr.append(self.GetAuthors(spans[x]))
-                            self.dateArr.append(self.GetDate(spans[x]))
-                            self.abstractArr.append(self.GetAbstract(spans[x]))
-                            self.keywordsArr.append(keywords[i])
-                else:
-                    print('Error: ' + str(page.status_code))
+                for x in tqdm(range(len(spans)), ncols=80, ascii=True, desc=keywords[i] + '; Page ' + str(1 + y)):
+                    self.titleArr.append(spans[x].find('a').get_text())
+                    self.hrefArr.append("https://openresearch.surrey.ac.uk" + spans[x].find('a').get('href'))
+                    self.authorArr.append(self.GetAuthors(spans[x]))
+                    self.dateArr.append(self.GetDate(spans[x]))
+                    self.abstractArr.append(self.GetAbstract(spans[x]))
+                    self.keywordsArr.append(keywords[i])
 
         if (isRaw):
             self.OutputRaw()
         else:
             self.OutputCSV()
+
 
     
     def OutputCSV(self):
@@ -52,25 +55,28 @@ class Surrey(University):
             writer = csv.DictWriter(csvFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL, fieldnames=headerList)
             writer.writeheader()
             for x in range(len(self.titleArr)):
-                writer.writerow({'Title': self.titleArr[x], 'Href': self.hrefArr[x], 'Author': self.authorArr[x], 'Date': self.dateArr[x], 'Abstract': self.abstractArr[x], 'Keywords': self.keywordsArr[x], 'University Name': 'University of Manchester'})
+                writer.writerow({'Title': self.titleArr[x], 'Href': self.hrefArr[x], 'Author': self.authorArr[x], 'Date': self.dateArr[x], 'Abstract': self.abstractArr[x], 'Keywords': self.keywordsArr[x], 'University Name': 'University of Surrey'})
 
     def OutputRaw(self):
         print('Title,Href,Author,Date,Abstract,Keyword,University Name')
         for x in range(len(self.arr)):
-            print(self.titleArr[x] + ',' + self.hrefArr[x] + ',' + self.authorArr[x] + ',' + self.dateArr[x] + ',' + self.abstractArr[x] + ',' + self.keywordsArr[x] + 'University of Manchester')
+            print(self.titleArr[x] + ',' + self.hrefArr[x] + ',' + self.authorArr[x] + ',' + self.dateArr[x] + ',' + self.abstractArr[x] + ',' + self.keywordsArr[x] + 'University of Surrey')
 
 
     def GetAuthors(self, span):
         para = span.find('p', {'class': 'authors'})
-        authorSpans = para.find_all('span')
-        output = ''
-        for x in range(len(authorSpans)):
-            if x == 0:
-                output = authorSpans[x].get_text()
-            else:
-                output = output + '; ' + authorSpans[x].get_text()
+        if para != None:
+            authorSpans = para.find_all('span')
+            output = ''
+            for x in range(len(authorSpans)):
+                if x == 0:
+                    output = authorSpans[x].get_text()
+                else:
+                    output = output + '; ' + authorSpans[x].get_text()
 
-        return output
+            return output
+        else:
+            return "None"
 
 
     def GetAbstract(self, span):
@@ -83,5 +89,14 @@ class Surrey(University):
 
     def GetDate(self, span):
         paras = span.find_all('p')
-        date = paras[5].get_text()
-        return date
+        for x in range(len(paras)):
+            if self.IsDate(paras[x].get_text()):
+                return paras[x].get_text()
+        return "None"
+
+    def IsDate(self, inputString, fuzzy=False):
+        try: 
+            parse(inputString, fuzzy=fuzzy)
+            return True
+        except ValueError:
+            return False

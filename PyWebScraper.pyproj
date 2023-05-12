@@ -23,6 +23,7 @@
     <Content Include="build.bat" />
     <Content Include="README.md" />
     <Content Include="requirements.txt" />
+    <Content Include="runexamples.bat" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\main.py" />
@@ -31,6 +32,7 @@
     <Compile Include="src\uni\Birmingham.py" />
     <Compile Include="src\uni\Manchester.py" />
     <Compile Include="src\uni\Portsmouth.py" />
+    <Compile Include="src\uni\RMIT.py" />
     <Compile Include="src\uni\Surrey.py" />
     <Compile Include="src\uni\University.py" />
   </ItemGroup>
