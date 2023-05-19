@@ -1,9 +1,6 @@
 from abc import ABC, abstractmethod
-import os
 
 class University(ABC):
-    sep = ","
-    wrap = "\""
 
     @abstractmethod
     def ScrapeForData(self, isRaw, depth, keywords):

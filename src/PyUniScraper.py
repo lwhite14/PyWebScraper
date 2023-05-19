@@ -29,3 +29,9 @@ class PyUniScraper(object):
             scraper.Portsmouth(args.raw, args.depth, args.keywords)
         if args.university == "rmit":
             scraper.RMIT(args.raw, args.depth, args.keywords)
+        if args.university == "sheffield":
+            scraper.Sheffield(args.raw, args.depth, args.keywords)
+        if args.university == "leeds":
+            scraper.Leeds(args.raw, args.depth, args.keywords)
+        if args.university == "york":
+            scraper.York(args.raw, args.depth, args.keywords)

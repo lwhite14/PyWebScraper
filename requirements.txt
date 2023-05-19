@@ -4,3 +4,4 @@ pyinstaller
 requests
 tqdm
 selenium-wire
+python-dateutil

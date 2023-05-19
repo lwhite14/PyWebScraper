@@ -30,11 +30,14 @@
     <Compile Include="src\PyUniScraper.py" />
     <Compile Include="src\Scraper.py" />
     <Compile Include="src\uni\Birmingham.py" />
+    <Compile Include="src\uni\Leeds.py" />
     <Compile Include="src\uni\Manchester.py" />
     <Compile Include="src\uni\Portsmouth.py" />
     <Compile Include="src\uni\RMIT.py" />
+    <Compile Include="src\uni\Sheffield.py" />
     <Compile Include="src\uni\Surrey.py" />
     <Compile Include="src\uni\University.py" />
+    <Compile Include="src\uni\York.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="out\" />
