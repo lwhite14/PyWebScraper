@@ -6,6 +6,7 @@ from uni.RMIT import RMIT
 from uni.Sheffield import Sheffield
 from uni.Leeds import Leeds
 from uni.York import York
+from uni.UWE import UWE
 
 class Scraper(object):
     manchester = Manchester()
@@ -16,6 +17,7 @@ class Scraper(object):
     sheffield = Sheffield()
     leeds = Leeds()
     york = York()
+    uwe = UWE()
 
     def Manchester(self, isRaw, depth, keywords):
         print ("Scraping for data... this might take a while!")
@@ -55,4 +57,9 @@ class Scraper(object):
     def York(self, isRaw, depth, keywords):
         print ("Scraping for data... this might take a while!")
         self.york.ScrapeForData(isRaw, depth, keywords)
+        print ("---DONE---")
+
+    def UWE(self, isRaw, depth, keywords):
+        print ("Scraping for data... this might take a while!")
+        self.uwe.ScrapeForData(isRaw, depth, keywords)
         print ("---DONE---")

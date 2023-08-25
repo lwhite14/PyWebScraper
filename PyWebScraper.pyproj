@@ -37,6 +37,7 @@
     <Compile Include="src\uni\Sheffield.py" />
     <Compile Include="src\uni\Surrey.py" />
     <Compile Include="src\uni\University.py" />
+    <Compile Include="src\uni\UWE.py" />
     <Compile Include="src\uni\York.py" />
   </ItemGroup>
   <ItemGroup>

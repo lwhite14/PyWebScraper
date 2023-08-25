@@ -6,3 +6,4 @@ python src/main.py rmit 2 Tech Marine Navy Ai
 python src/main.py sheffield 2 Tech Marine Navy Ai
 python src/main.py leeds 2 Tech Marine Navy Ai
 python src/main.py york 2 Tech Marine Navy Ai
+python src/main.py uwe 2 Tech Marine Navy Ai

@@ -13,11 +13,11 @@ class PyUniScraper(object):
         scraper = Scraper()
         parser = CustomParser(description='Parses for research output from selected Universities.')
 
-        parser.add_argument('university', help='University to get information for [manchester|birmingham|surrey|portsmouth|rmit]')
+        parser.add_argument('university', help='University to get information for [manchester|birmingham|surrey|portsmouth|rmit|sheffield|leeds|york|uwe]')
         parser.add_argument('depth', type=int, default=1, help='Number of pages')
         parser.add_argument('keywords', metavar='K', type=str, nargs='+', help='Keywords to search for')
         parser.add_argument('--raw', dest='raw', action='store_const', const=True, default=False, help='Output to console instead of csv')
-        parser.add_argument('-v', '--version', action='version', version='PyUniScraper v0.1.3')
+        parser.add_argument('-v', '--version', action='version', version='PyUniScraper v0.1.4')
         args = parser.parse_args()
         if args.university == "manchester":
             scraper.Manchester(args.raw, args.depth, args.keywords)
@@ -35,3 +35,5 @@ class PyUniScraper(object):
             scraper.Leeds(args.raw, args.depth, args.keywords)
         if args.university == "york":
             scraper.York(args.raw, args.depth, args.keywords)
+        if args.university == "uwe":
+            scraper.UWE(args.raw, args.depth, args.keywords)
