@@ -66,6 +66,10 @@ class Lancaster(University):
                 output = persons[x].find("span").get_text()
             else:
                 output = output + '; ' + persons[x].find("span").get_text()
+
+        if output == '':
+            return "None"
+
         return output
 
     def GetAbstract(self, href):

@@ -15,9 +15,7 @@ Visual Studio when creating it this way. If you're not using Visual Studio then 
 
     cd UniversityWebScraper
     python -m venv ./venv
-    cd venv/Scripts
-    activate
-    cd ../..
+    "venv/Scripts/activate"
     pip install -r requirements.txt
 
 ## Running the Program
