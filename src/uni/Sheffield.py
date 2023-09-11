@@ -28,14 +28,13 @@ class Sheffield(University):
                     trs = soup.find_all("tr", {"class": "ep_search_result"})
 
                     for x in tqdm(range(len(trs)), ncols=80, ascii=True, desc=keywords[i] + "; Page " + str(1 + y)):
-                        if not x == 0:
-                            self.titleArr.append(trs[x].find("em").get_text())
-                            href = self.GetHref(trs[x])
-                            self.hrefArr.append(href)
-                            self.authorArr.append(self.GetAuthors(trs[x]))
-                            self.dateArr.append(self.GetDate(href).strftime("%B %Y"))
-                            self.abstractArr.append(self.GetAbstract(href))
-                            self.keywordsArr.append(keywords[i])
+                        self.titleArr.append(trs[x].find("em").get_text())
+                        href = self.GetHref(trs[x])
+                        self.hrefArr.append(href)
+                        self.authorArr.append(self.GetAuthors(trs[x]))
+                        self.dateArr.append(self.GetDate(href).strftime("%B %Y"))
+                        self.abstractArr.append(self.GetAbstract(href))
+                        self.keywordsArr.append(keywords[i])
                 else:
                     print("Error: " + str(page.status_code))
 

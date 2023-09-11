@@ -20,7 +20,7 @@ class Aberdeen(University):
     def ScrapeForData(self, isRaw, depth, keywords):
         for i in range(len(keywords)):
             for y in range(depth):
-                url = 'https://aura.abdn.ac.uk/discover?rpp=20&etal=0&query='+keywords[i]+'&scope=/&group_by=none&page='+str(y)+'&sort_by=score&order=desc'
+                url = 'https://aura.abdn.ac.uk/discover?rpp=20&etal=0&query='+keywords[i]+'&scope=/&group_by=none&page='+str(y+1)+'&sort_by=score&order=desc'
                 page = requests.get(url)
 
                 if page.status_code == 200:
