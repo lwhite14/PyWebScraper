@@ -9,3 +9,4 @@ python src/main.py york 2 Tech Marine Navy Ai
 python src/main.py uwe 2 Tech Marine Navy Ai
 python src/main.py lancaster 2 Tech Marine Navy Ai
 python src/main.py aberdeen 2 Tech Marine Navy Ai
+python src/main.py bathspa 2 Tech Marine Navy Ai

@@ -19,14 +19,16 @@ class Aberdeen(University):
 
                     for x in tqdm(range(len(divs)), ncols=80, ascii=True, desc=keywords[i] + "; Page " + str(1 + y)):
                         href = divs[x].find("a").get("href")
-                        pageMaterial = requests.get("https://aura.abdn.ac.uk/" + href)
-                        soup = BeautifulSoup(pageMaterial.text, "html.parser")
-                        self.titleArr.append(self.GetTitle(soup))
-                        self.hrefArr.append("https://aura.abdn.ac.uk/" + href)
-                        self.authorArr.append(self.GetAuthors(soup))
-                        self.dateArr.append(self.GetDate(soup))
-                        self.abstractArr.append(self.GetAbstract(soup))
-                        self.keywordsArr.append(keywords[i])
+                        if href != None:
+                            pageMat = requests.get("https://aura.abdn.ac.uk/" + href)
+                            if pageMat.status_code == 200:
+                                soup = BeautifulSoup(pageMat.text, "html.parser")
+                                self.titleArr.append(self.GetTitle(soup))
+                                self.hrefArr.append("https://aura.abdn.ac.uk/" + href)
+                                self.authorArr.append(self.GetAuthors(soup))
+                                self.dateArr.append(self.GetDate(soup))
+                                self.abstractArr.append(self.GetAbstract(soup))
+                                self.keywordsArr.append(keywords[i])
                 else:
                     print("Error: " + str(page.status_code))
 
@@ -73,7 +75,6 @@ class Aberdeen(University):
             return "None"
 
         finalString = abstractDiv.get_text()
-        #finalString = finalString.replace("\n", " ")
         finalString = finalString.replace(" Abstract:  ", "")
 
         return finalString

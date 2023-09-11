@@ -19,17 +19,16 @@ class Sheffield(University):
 
                     for x in tqdm(range(len(trs)), ncols=80, ascii=True, desc=keywords[i] + "; Page " + str(1 + y)):
                         href = self.GetHref(trs[x])
-                        pageMat = requests.get(href)
-                        if page.status_code == 200:
-                            soupMat = BeautifulSoup(pageMat.text, "html.parser")
-                            self.titleArr.append(trs[x].find("em").get_text())
-                            self.hrefArr.append(href)
-                            self.authorArr.append(self.GetAuthors(trs[x]))
-                            self.dateArr.append(self.GetDate(soupMat).strftime("%B %Y"))
-                            self.abstractArr.append(self.GetAbstract(soupMat))
-                            self.keywordsArr.append(keywords[i])
-                        else:
-                            return
+                        if href != "None":
+                            pageMat = requests.get(href)
+                            if page.status_code == 200:
+                                soupMat = BeautifulSoup(pageMat.text, "html.parser")
+                                self.titleArr.append(trs[x].find("em").get_text())
+                                self.hrefArr.append(href)
+                                self.authorArr.append(self.GetAuthors(trs[x]))
+                                self.dateArr.append(self.GetDate(soupMat).strftime("%B %Y"))
+                                self.abstractArr.append(self.GetAbstract(soupMat))
+                                self.keywordsArr.append(keywords[i])
                 else:
                     print("Error: " + str(page.status_code))
 

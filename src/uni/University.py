@@ -19,7 +19,7 @@ class University(ABC):
             writer = csv.DictWriter(csvFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL, fieldnames=headerList)
             writer.writeheader()
             for x in range(len(self.titleArr)):
-                abstract = self.abstractArr[x].replace("\n", " ")
+                abstract = self.abstractArr[x].replace('\n', ' ').replace('\r', '')
                 writer.writerow({'Title': self.titleArr[x], 'Href': self.hrefArr[x], 'Author': self.authorArr[x], 'Date': self.dateArr[x], 'Abstract': abstract, 'Keywords': self.keywordsArr[x], 'University Name': uniNameFull})
 
 

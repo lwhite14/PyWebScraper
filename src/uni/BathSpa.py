@@ -5,12 +5,12 @@ import requests
 import csv
 from dateutil.parser import parse
 
-class Leeds(University):
+class BathSpa(University):
 
     def ScrapeForData(self, isRaw, depth, keywords):
         for i in range(len(keywords)):
             for y in range(depth):
-                url = 'https://eprints.whiterose.ac.uk/cgi/search/archive/advanced?exp=0%7C1%7C-date%2Fcreators_name%2Ftitle%7Carchive%7C-%7Ciau%3Aiau%3AANY%3AEQ%3ALeeds%7Ckeywords%3Akeywords%3AALL%3AIN%3A'+keywords[i]+'%7C-%7Ceprint_status%3Aeprint_status%3AANY%3AEQ%3Aarchive%7Cmetadata_visibility%3Ametadata_visibility%3AANY%3AEQ%3Ashow&_action_search=1&order=-date%2Fcreators_name%2Ftitle&screen=Search&cache=16777394&search_offset='+str(y*2)+'0'
+                url = 'https://researchspace.bathspa.ac.uk/cgi/facet/simple2?exp=0%7C1%7C-date%2Fcreators_name%2Ftitle%7Carchive%7C-%7Cq%3A%3AALL%3AIN%3A'+keywords[i]+'%7C-%7C&_action_search=1&order=-date%2Fcreators_name%2Ftitle&screen=XapianSearch&search_offset='+str(y*2)+'0'
                 page = requests.get(url)
 
                 if page.status_code == 200:
@@ -23,19 +23,19 @@ class Leeds(University):
                             pageMat = requests.get(href)
                             if page.status_code == 200:
                                 soupMat = BeautifulSoup(pageMat.text, "html.parser")
-                                self.titleArr.append(trs[x].find("em").get_text())
+                                self.titleArr.append(trs[x].find("em").get_text().replace("'", ""))
                                 self.hrefArr.append(href)
                                 self.authorArr.append(self.GetAuthors(trs[x]))
-                                self.dateArr.append(self.GetDate(soupMat).strftime("%B %Y"))
+                                self.dateArr.append(self.GetDate(soupMat))
                                 self.abstractArr.append(self.GetAbstract(soupMat))
                                 self.keywordsArr.append(keywords[i])
                 else:
                     print("Error: " + str(page.status_code))
 
         if (isRaw):
-            self.OutputRaw("University of Leeds")
+            self.OutputRaw("Bath Spa University")
         else:
-            self.OutputCSV("University of Leeds", "leeds")
+            self.OutputCSV("Bath Spa University", "bathspa")
 
 
     def GetAuthors(self, tr):
@@ -43,10 +43,16 @@ class Leeds(University):
         if authorSpans != None:
             output = ''
             for x in range(len(authorSpans)):
+                toAdd = authorSpans[x].get_text()
+                toRemoveElement = authorSpans[x].find("span", {"class": "orcid-tooltip"})
+                if toRemoveElement != None:
+                    toRemove = toRemoveElement.get_text()
+                    toAdd = toAdd.replace(toRemove, "")
+
                 if x == 0:
-                    output = authorSpans[x].get_text()
+                    output = toAdd
                 else:
-                    output = output + '; ' + authorSpans[x].get_text()
+                    output = output + '; ' + toAdd
             return output
         else:
             return "None"
@@ -61,25 +67,26 @@ class Leeds(University):
 
 
     def GetDate(self, soup):
-        #page = requests.get(href)
-        #soup = BeautifulSoup(page.text, "html.parser")
+        tds = soup.find_all("td")
+        for i in range(len(tds)):
+            if self.is_date(tds[i].get_text()):
+                return parse(tds[i].get_text(), fuzzy=True).strftime("%B %Y")
 
-        ul = soup.find("ul", {"class": "datesdatesdates"})
-        
-        lis = ul.find_all("li")
-        dates = []
+        return "None"
 
-        for li in lis:
-            dates.append(parse(li.get_text(), fuzzy=True))
-
-        return dates[0]
 
 
     def GetAbstract(self, soup):
-        #page = requests.get(href)
-        #soup = BeautifulSoup(page.text, "html.parser")
-        pAbstract = soup.find("p", {"class": "abstract"})
+        pAbstract = soup.find("p", {"style": "text-align: left; margin: 1em auto 0em auto"})
         if pAbstract != None:
             return pAbstract.get_text()
         else:
             return "None"
+
+    def is_date(self, string, fuzzy=False):
+        try: 
+            parse(string, fuzzy=fuzzy)
+            return True
+
+        except ValueError:
+            return False
