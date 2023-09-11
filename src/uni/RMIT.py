@@ -7,16 +7,6 @@ import csv
 import time
 
 class RMIT(University):
-    titleArr = []
-    hrefArr = []
-    authorArr = []
-    dateArr = []
-    abstractArr = []
-    keywordsArr = []
-
-    def __init__(self):
-        pass
-
 
     def ScrapeForData(self, isRaw, depth, keywords):
         print("The scraping for this University uses Selenium and will take longer to parse... You have been warned!")
@@ -43,24 +33,9 @@ class RMIT(University):
                     self.keywordsArr.append(keywords[i])
 
         if (isRaw):
-            self.OutputRaw()
+            self.OutputRaw("Royal Melbourne Institute of Technology")
         else:
-            self.OutputCSV()
-
-
-    
-    def OutputCSV(self):
-        with open('out/rmit.csv', 'w', newline='', encoding='utf-8') as csvFile:
-            headerList = ['Title', 'Href', 'Author', 'Date', 'Abstract', 'Keywords', 'University Name']
-            writer = csv.DictWriter(csvFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL, fieldnames=headerList)
-            writer.writeheader()
-            for x in range(len(self.titleArr)):
-                writer.writerow({'Title': self.titleArr[x], 'Href': self.hrefArr[x], 'Author': self.authorArr[x], 'Date': self.dateArr[x], 'Abstract': self.abstractArr[x], 'Keywords': self.keywordsArr[x], 'University Name': 'Royal Melbourne Institute of Technology'})
-
-    def OutputRaw(self):
-        print('Title,Href,Author,Date,Abstract,Keyword,University Name')
-        for x in range(len(self.arr)):
-            print(self.titleArr[x] + ',' + self.hrefArr[x] + ',' + self.authorArr[x] + ',' + self.dateArr[x] + ',' + self.abstractArr[x] + ',' + self.keywordsArr[x] + 'Royal Melbourne Institute of Technology')
+            self.OutputCSV("Royal Melbourne Institute of Technology", "rmit")
 
 
     def GetAuthors(self, span):

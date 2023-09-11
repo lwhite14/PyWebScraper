@@ -6,16 +6,6 @@ import csv
 from dateutil.parser import parse
 
 class Sheffield(University):
-    titleArr = []
-    hrefArr = []
-    authorArr = []
-    dateArr = []
-    abstractArr = []
-    keywordsArr = []
-
-    def __init__(self):
-        pass
-
 
     def ScrapeForData(self, isRaw, depth, keywords):
         for i in range(len(keywords)):
@@ -28,35 +18,25 @@ class Sheffield(University):
                     trs = soup.find_all("tr", {"class": "ep_search_result"})
 
                     for x in tqdm(range(len(trs)), ncols=80, ascii=True, desc=keywords[i] + "; Page " + str(1 + y)):
-                        self.titleArr.append(trs[x].find("em").get_text())
                         href = self.GetHref(trs[x])
-                        self.hrefArr.append(href)
-                        self.authorArr.append(self.GetAuthors(trs[x]))
-                        self.dateArr.append(self.GetDate(href).strftime("%B %Y"))
-                        self.abstractArr.append(self.GetAbstract(href))
-                        self.keywordsArr.append(keywords[i])
+                        pageMat = requests.get(href)
+                        if page.status_code == 200:
+                            soupMat = BeautifulSoup(pageMat.text, "html.parser")
+                            self.titleArr.append(trs[x].find("em").get_text())
+                            self.hrefArr.append(href)
+                            self.authorArr.append(self.GetAuthors(trs[x]))
+                            self.dateArr.append(self.GetDate(soupMat).strftime("%B %Y"))
+                            self.abstractArr.append(self.GetAbstract(soupMat))
+                            self.keywordsArr.append(keywords[i])
+                        else:
+                            return
                 else:
                     print("Error: " + str(page.status_code))
 
         if (isRaw):
-            self.OutputRaw()
+            self.OutputRaw("University of Sheffield")
         else:
-            self.OutputCSV()
-
-
-    def OutputCSV(self):
-        with open('out/sheffield.csv', 'w', newline='', encoding='utf-8') as csvFile:
-            headerList = ['Title', 'Href', 'Author', 'Date', 'Abstract', 'Keywords', 'University Name']
-            writer = csv.DictWriter(csvFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL, fieldnames=headerList)
-            writer.writeheader()
-            for x in range(len(self.titleArr)):
-                writer.writerow({'Title': self.titleArr[x], 'Href': self.hrefArr[x], 'Author': self.authorArr[x], 'Date': self.dateArr[x], 'Abstract': self.abstractArr[x], 'Keywords': self.keywordsArr[x], 'University Name': 'University of Sheffield'})
-
-    def OutputRaw(self):
-        print("Title,Href,Author,Date,Abstract,Keyword,University Name")
-        for x in range(len(self.arr)):
-            print(self.titleArr[x] + ',' + self.hrefArr[x] + ',' + self.authorArr[x] + ',' + self.dateArr[x] + ',' + self.abstractArr[x] + ',' + self.keywordsArr[x] + 'University of Sheffield')
-
+            self.OutputCSV("University of Sheffield", "sheffield")
 
     def GetAuthors(self, tr):
         authorSpans = tr.find_all('span', {'class':'person_name'})
@@ -80,9 +60,9 @@ class Sheffield(University):
             return "None"
 
 
-    def GetDate(self, href):
-        page = requests.get(href)
-        soup = BeautifulSoup(page.text, "html.parser")
+    def GetDate(self, soup):
+        #page = requests.get(href)
+        #soup = BeautifulSoup(page.text, "html.parser")
 
         ul = soup.find("ul", {"class": "datesdatesdates"})
         
@@ -95,9 +75,9 @@ class Sheffield(University):
         return dates[0]
 
 
-    def GetAbstract(self, href):
-        page = requests.get(href)
-        soup = BeautifulSoup(page.text, "html.parser")
+    def GetAbstract(self, soup):
+        #page = requests.get(href)
+        #soup = BeautifulSoup(page.text, "html.parser")
         pAbstract = soup.find("p", {"class": "abstract"})
         if pAbstract != None:
             return pAbstract.get_text()

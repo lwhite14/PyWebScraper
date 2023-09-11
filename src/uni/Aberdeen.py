@@ -6,16 +6,6 @@ import csv
 from dateutil.parser import parse
 
 class Aberdeen(University):
-    titleArr = []
-    hrefArr = []
-    authorArr = []
-    dateArr = []
-    abstractArr = []
-    keywordsArr = []
-
-    def __init__(self):
-        pass
-
 
     def ScrapeForData(self, isRaw, depth, keywords):
         for i in range(len(keywords)):
@@ -41,23 +31,9 @@ class Aberdeen(University):
                     print("Error: " + str(page.status_code))
 
         if (isRaw):
-            self.OutputRaw()
+            self.OutputRaw("University of Aberdeen")
         else:
-            self.OutputCSV()
-
-
-    def OutputCSV(self):
-        with open('out/aberdeen.csv', 'w', newline='', encoding='utf-8') as csvFile:
-            headerList = ['Title', 'Href', 'Author', 'Date', 'Abstract', 'Keywords', 'University Name']
-            writer = csv.DictWriter(csvFile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL, fieldnames=headerList)
-            writer.writeheader()
-            for x in range(len(self.titleArr)):
-                writer.writerow({'Title': self.titleArr[x], 'Href': self.hrefArr[x], 'Author': self.authorArr[x], 'Date': self.dateArr[x], 'Abstract': self.abstractArr[x], 'Keywords': self.keywordsArr[x], 'University Name': 'University of Aberdeen'})
-
-    def OutputRaw(self):
-        print("Title,Href,Author,Date,Abstract,Keyword,University Name")
-        for x in range(len(self.arr)):
-            print(self.titleArr[x] + ',' + self.hrefArr[x] + ',' + self.authorArr[x] + ',' + self.dateArr[x] + ',' + self.abstractArr[x] + ',' + self.keywordsArr[x] + 'University of Aberdeen')
+            self.OutputCSV("University of Aberdeen", "aberdeen")
 
 
     def GetTitle(self, soup):
@@ -97,7 +73,7 @@ class Aberdeen(University):
             return "None"
 
         finalString = abstractDiv.get_text()
-        finalString = finalString.replace("\n", " ")
+        #finalString = finalString.replace("\n", " ")
         finalString = finalString.replace(" Abstract:  ", "")
 
         return finalString
