@@ -26,12 +26,14 @@
     <Content Include="runexamples.bat" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\BoilerPlate.py" />
     <Compile Include="src\main.py" />
     <Compile Include="src\PyUniScraper.py" />
     <Compile Include="src\Scraper.py" />
     <Compile Include="src\uni\Aberdeen.py" />
     <Compile Include="src\uni\BathSpa.py" />
     <Compile Include="src\uni\Birmingham.py" />
+    <Compile Include="src\uni\Exeter.py" />
     <Compile Include="src\uni\Lancaster.py" />
     <Compile Include="src\uni\Leeds.py" />
     <Compile Include="src\uni\Manchester.py" />
